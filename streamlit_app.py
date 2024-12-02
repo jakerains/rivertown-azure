@@ -9,7 +9,8 @@ from settings import (
     CHAT_INPUT_PLACEHOLDER,
     WELCOME_MESSAGE,
     ASSISTANT_ICON,
-    USER_ICON
+    USER_ICON,
+    CS_PHONE_REQUEST
 )
 from bland_utils import handle_customer_service_request
 
@@ -31,6 +32,8 @@ def initialize_session_state():
         st.session_state.cs_mode = False
     if "phone_number" not in st.session_state:
         st.session_state.phone_number = None
+    if "customer_name" not in st.session_state:
+        st.session_state.customer_name = None
 
 def format_response(text):
     """Format the response text with proper spacing and styling"""
@@ -108,34 +111,66 @@ def process_user_input():
             message_placeholder = st.empty()
             
             # Check for customer service request
-            cs_response = handle_customer_service_request(prompt, st.session_state.phone_number)
+            cs_response = None
+            
+            # If we're in CS mode or this is a CS request, handle it
+            if st.session_state.cs_mode or any(phrase in prompt.lower() for phrase in [
+                'speak to someone', 'talk to a person', 'customer service',
+                'representative', 'speak to a human', 'talk to someone',
+                'speak with someone', 'call me back', 'give me a call',
+                'contact me', 'need help', 'can someone call',
+                'want to speak to', 'want to talk to', 'call me'
+            ]):
+                # Set CS mode if not already set
+                if not st.session_state.cs_mode:
+                    st.session_state.cs_mode = True
+                
+                cs_response = handle_customer_service_request(
+                    prompt, 
+                    st.session_state.phone_number,
+                    st.session_state.customer_name
+                )
             
             if cs_response:
                 # Stream the customer service response
                 full_response = stream_response(cs_response, message_placeholder)
                 
                 # Update session state based on response
-                if "what's the best phone number" in cs_response.lower():
-                    st.session_state.cs_mode = True
-                    st.session_state.phone_number = None
-                elif sum(c.isdigit() for c in prompt) >= 10:
+                if "could you share your first name" in cs_response.lower():
+                    st.session_state.customer_name = None
+                elif st.session_state.cs_mode and not st.session_state.customer_name:
+                    # Store the customer's name if it's a valid name response
+                    potential_name = prompt.strip().split()[0]
+                    if len(potential_name) > 1 and not any(c.isdigit() for c in potential_name):
+                        st.session_state.customer_name = potential_name.capitalize()
+                        # Force the next response to ask for phone number
+                        full_response = stream_response(
+                            CS_PHONE_REQUEST.format(customer_name=st.session_state.customer_name), 
+                            message_placeholder
+                        )
+                elif sum(c.isdigit() for c in prompt) >= 10 and st.session_state.customer_name:
                     st.session_state.phone_number = prompt
                     if "sara will be calling you right now" in cs_response.lower():
+                        # Keep the name but reset other CS states
                         st.session_state.cs_mode = False
                         st.session_state.phone_number = None
             else:
                 # Regular chat response
-                with st.spinner("Crafting the perfect response for you... 🎯"):
-                    response = chat_with_products(
-                        messages=st.session_state.messages,
-                        context=st.session_state.context
-                    )
-                    
-                    # Stream the response
-                    full_response = stream_response(response["message"].content, message_placeholder)
-                    
-                    # Update context if needed
-                    st.session_state.context = response["context"]
+                loading_placeholder = st.empty()
+                with loading_placeholder:
+                    with st.spinner("Crafting the perfect response for you... 🎯"):
+                        response = chat_with_products(
+                            messages=st.session_state.messages,
+                            context=st.session_state.context
+                        )
+                # Clear the loading message before streaming
+                loading_placeholder.empty()
+                
+                # Stream the response
+                full_response = stream_response(response["message"].content, message_placeholder)
+                
+                # Update context if needed
+                st.session_state.context = response["context"]
             
             # Add assistant response to chat history
             st.session_state.messages.append(
@@ -242,6 +277,7 @@ def main():
             st.session_state.context = {}
             st.session_state.cs_mode = False
             st.session_state.phone_number = None
+            st.session_state.customer_name = None
             st.rerun()
         
         st.markdown("---")

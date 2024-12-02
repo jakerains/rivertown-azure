@@ -1,5 +1,128 @@
 # Changelog
 
+## [0.4.1] - 2024-03-20
+
+### Fixed
+- Fixed missing import for CS_PHONE_REQUEST
+- Added proper imports from settings module
+- Fixed NameError in customer service flow
+
+## [0.4.0] - 2024-03-20
+
+### Fixed
+- Fixed customer service state management
+- Fixed response flow after name collection
+- Fixed phone number request timing
+- Fixed CS mode persistence
+
+### Changed
+- Improved CS conversation state handling
+- Enhanced name collection confirmation
+- Added forced phone number request after name
+- Updated CS mode initialization
+
+## [0.3.9] - 2024-03-20
+
+### Fixed
+- Fixed customer service flow to properly request phone number after name
+- Added "call me" to CS trigger phrases
+- Fixed name collection confirmation to proceed to phone number request
+- Fixed response flow for CS interactions
+
+### Changed
+- Improved CS conversation flow
+- Enhanced name to phone number transition
+- Updated CS trigger phrase matching
+- Refined response handling for CS requests
+
+## [0.3.8] - 2024-03-20
+
+### Fixed
+- Restored animated spinner during response generation
+- Fixed loading indicator animation
+- Maintained smooth transition to streaming
+
+### Changed
+- Updated loading state implementation to use native Streamlit spinner
+- Improved visual feedback during processing
+- Enhanced loading-to-streaming transition
+
+## [0.3.7] - 2024-03-20
+
+### Changed
+- Improved response streaming UX by removing loading spinner once streaming begins
+- Enhanced visual feedback during response generation
+- Updated loading state management for smoother transitions
+
+## [0.3.6] - 2024-03-20
+
+### Fixed
+- Fixed customer service flow to ensure phone number is collected
+- Fixed call initiation logic to require both name and phone number
+- Fixed phone number validation before call initiation
+- Added repeat phone number request for invalid inputs
+
+### Changed
+- Improved phone number collection flow
+- Enhanced validation checks for phone numbers
+- Updated CS flow to ensure all required information is collected
+- Added better error handling for invalid phone numbers
+
+## [0.3.5] - 2024-03-20
+
+### Fixed
+- Fixed customer service flow to properly collect name before phone number
+- Fixed name persistence throughout chat session
+- Fixed CS mode state management
+- Fixed premature name collection in non-CS contexts
+
+### Changed
+- Improved customer service state handling
+- Enhanced name collection validation
+- Modified CS flow to maintain name after call completion
+- Updated CS trigger conditions to respect chat state
+
+## [0.3.4] - 2024-03-20
+
+### Fixed
+- Fixed false name detection for question words like "what's"
+- Added comprehensive list of question words to ignore
+- Improved name validation to prevent treating questions as names
+- Fixed handling of general inquiry phrases
+
+### Added
+- Added question word detection
+- Added more question patterns to exclude
+- Added name validation rules
+- Added length and character checks for potential names
+
+## [0.3.3] - 2024-03-20
+
+### Fixed
+- Fixed customer service trigger to avoid false positives
+- Added exclusion patterns for general questions
+- Improved phrase matching for CS requests
+- Removed overly broad trigger words
+
+### Added
+- Added more specific customer service trigger phrases
+- Added exclusion list for information queries
+- Added better context awareness for CS requests
+
+## [0.3.2] - 2024-03-20
+
+### Added
+- Added customer name collection before phone number
+- Added name verification in Bland AI call script
+- Added personalized responses using customer's name
+- Added separate messages for name and phone requests
+
+### Changed
+- Updated customer service flow to collect name first
+- Modified Bland AI script to verify caller identity
+- Enhanced response messages with customer name
+- Improved session state management for customer info
+
 ## [0.3.1] - 2024-03-20
 
 ### Added

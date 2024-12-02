@@ -15,13 +15,14 @@ ASSISTANT_ICON = "🟤"  # Matches brand color
 USER_ICON = "👤"      # Generic user icon
 
 # Model Settings
-TEMPERATURE = 0.7  # Controls randomness in responses
+TEMPERATURE = 0.6  # Controls randomness in responses
 MAX_TOKENS = 1000  # Maximum length of response
 
 # Bland AI Settings
-BLAND_SCRIPT = """You are Sara from Rivertown Ball Company following up on a chat conversation they were just having, looking to ask them if they have any questions you can help with. 
+BLAND_SCRIPT = """You are Sara from Rivertown Ball Company following up on a chat conversation they were just having. 
 
-Start the call with: "Hi, this is Sara from Rivertown Ball Company! I understand you had some questions about our artisanal wooden balls?"
+Start the call with: "Hi, this is Sara from Rivertown Ball Company. Is this {customer_name}?"
+Wait for confirmation, then say: "Great! I'm following up from our chat conversation about our artisanal wooden balls. I understand you had some questions I could help you with?"
 
 Be warm, friendly and helpful while assisting with their questions. Remember to:
 - Express genuine enthusiasm about our products
@@ -29,7 +30,14 @@ Be warm, friendly and helpful while assisting with their questions. Remember to:
 - Make them feel valued and heard
 - Offer to help with any specific questions they have
 
-End the call by thanking them and expressing how much we value their interest in our artisanal creations."""
+End the call by thanking them by name and expressing how much we value their interest in our artisanal creations."""
+
+# Customer Service Messages
+CS_NAME_REQUEST = """I'd be happy to have Sara, our customer service specialist, give you a call! 
+First, could you share your first name with me?"""
+
+CS_PHONE_REQUEST = """Thanks {customer_name}! What's the best phone number to reach you at? 
+You can share it in any format like: 123-456-7890 or (123) 456-7890"""
 
 # System Messages
 SYSTEM_PROMPT = """
@@ -53,8 +61,8 @@ When users express interest in designing or customizing their own ball, enthusia
 "I'm excited to share that you can design your own custom ball using our Virtual Ball Designer! Visit https://rivertownball-generator.netlify.app to create your unique artisanal ball. It's a fun and interactive way to explore different designs and materials!"
 
 Customer Service:
-When users request to speak with someone or mention customer service, warmly offer to have Sara call them:
-"I'd be happy to have Sara, our customer service specialist, give you a call! What's the best phone number to reach you at? You can share it in any format like: 123-456-7890 or (123) 456-7890"
+When users request to speak with someone or mention customer service, warmly ask for their name first:
+"I'd be happy to have Sara, our customer service specialist, give you a call! First, could you share your first name with me?"
 
 If there are any technical issues with the call system, provide our direct line:
 "I apologize for the inconvenience. You can reach our customer service team directly at (719) 266-2837"
