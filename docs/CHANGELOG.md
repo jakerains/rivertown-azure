@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.2] - 2024-03-20
+
+### Added
+- Added Streamlit secrets.toml configuration
+- Added TOML format for Streamlit Cloud deployment
+- Added organized sections for different service secrets
+
 ## [0.4.1] - 2024-03-20
 
 ### Fixed
