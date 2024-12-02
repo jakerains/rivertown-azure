@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.4.3] - 2024-03-20
+
+### Added
+- Added complete secrets.toml configuration
+- Added Azure Search endpoint and key to secrets
+- Added all environment variables to Streamlit secrets
+
+### Changed
+- Migrated from .env to Streamlit secrets
+- Updated all files to use st.secrets
+- Removed dotenv dependency
+- Improved secrets organization and documentation
+
 ## [0.4.2] - 2024-03-20
 
 ### Added

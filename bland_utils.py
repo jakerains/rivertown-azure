@@ -1,7 +1,7 @@
 import os
 import requests
 import logging
-from dotenv import load_dotenv
+import streamlit as st
 from settings import BLAND_SCRIPT, CS_NAME_REQUEST, CS_PHONE_REQUEST
 
 # Configure logging
@@ -11,7 +11,7 @@ def init_bland():
     """Initialize Bland API configuration"""
     return {
         'headers': {
-            'Authorization': os.getenv('BLAND_API_KEY')
+            'Authorization': st.secrets["BLAND_API_KEY"]
         },
         'base_url': 'https://us.api.bland.ai/v1'
     }
