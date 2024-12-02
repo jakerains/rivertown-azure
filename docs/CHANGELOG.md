@@ -1,5 +1,32 @@
 # Changelog
 
+## [0.3.1] - 2024-03-20
+
+### Added
+- Added centralized Bland AI script configuration in settings.py
+- Added enhanced call script with better structure and guidelines
+- Added specific opening and closing statements for calls
+
+### Changed
+- Moved Bland AI script from bland_utils.py to settings.py
+- Enhanced call script with more detailed instructions
+- Improved customer service conversation flow
+
+## [0.3.0] - 2024-03-20
+
+### Added
+- Integrated Bland AI for customer service calls
+- Added customer service mode with phone number handling
+- Added Sara as customer service specialist
+- Added automatic call initiation system
+- Added fallback phone number for technical issues
+
+### Changed
+- Updated system prompt to include customer service scenarios
+- Enhanced chat flow to handle call requests
+- Added session state management for CS mode
+- Improved error handling for call system
+
 ## [0.2.2] - 2024-03-20
 
 ### Added

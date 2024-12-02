@@ -11,6 +11,7 @@ from settings import (
     ASSISTANT_ICON,
     USER_ICON
 )
+from bland_utils import handle_customer_service_request
 
 # Load environment variables
 load_dotenv()
@@ -26,6 +27,10 @@ def initialize_session_state():
         })
     if "context" not in st.session_state:
         st.session_state.context = {}
+    if "cs_mode" not in st.session_state:
+        st.session_state.cs_mode = False
+    if "phone_number" not in st.session_state:
+        st.session_state.phone_number = None
 
 def format_response(text):
     """Format the response text with proper spacing and styling"""
@@ -102,22 +107,40 @@ def process_user_input():
         with st.chat_message("assistant", avatar=ASSISTANT_ICON):
             message_placeholder = st.empty()
             
-            with st.spinner("Crafting the perfect response for you... 🎯"):
-                response = chat_with_products(
-                    messages=st.session_state.messages,
-                    context=st.session_state.context
-                )
+            # Check for customer service request
+            cs_response = handle_customer_service_request(prompt, st.session_state.phone_number)
+            
+            if cs_response:
+                # Stream the customer service response
+                full_response = stream_response(cs_response, message_placeholder)
                 
-                # Stream the response
-                full_response = stream_response(response["message"].content, message_placeholder)
-                
-                # Update context if needed
-                st.session_state.context = response["context"]
-                
-                # Add assistant response to chat history
-                st.session_state.messages.append(
-                    {"role": "assistant", "content": full_response}
-                )
+                # Update session state based on response
+                if "what's the best phone number" in cs_response.lower():
+                    st.session_state.cs_mode = True
+                    st.session_state.phone_number = None
+                elif sum(c.isdigit() for c in prompt) >= 10:
+                    st.session_state.phone_number = prompt
+                    if "sara will be calling you right now" in cs_response.lower():
+                        st.session_state.cs_mode = False
+                        st.session_state.phone_number = None
+            else:
+                # Regular chat response
+                with st.spinner("Crafting the perfect response for you... 🎯"):
+                    response = chat_with_products(
+                        messages=st.session_state.messages,
+                        context=st.session_state.context
+                    )
+                    
+                    # Stream the response
+                    full_response = stream_response(response["message"].content, message_placeholder)
+                    
+                    # Update context if needed
+                    st.session_state.context = response["context"]
+            
+            # Add assistant response to chat history
+            st.session_state.messages.append(
+                {"role": "assistant", "content": full_response}
+            )
 
 def main():
     # Set page config with initial sidebar state
@@ -217,6 +240,8 @@ def main():
         if st.button("Reset Chat", key="reset"):
             st.session_state.messages = []
             st.session_state.context = {}
+            st.session_state.cs_mode = False
+            st.session_state.phone_number = None
             st.rerun()
         
         st.markdown("---")

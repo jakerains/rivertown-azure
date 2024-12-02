@@ -6,3 +6,4 @@ pandas
 python-dotenv
 opentelemetry-api
 streamlit
+requests
