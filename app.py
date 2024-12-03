@@ -1,8 +1,6 @@
 import streamlit as st
 from riverchat import chat_with_products
-import os
 import time
-from dotenv import load_dotenv
 from settings import (
     APP_TITLE, 
     APP_ICON, 
@@ -13,9 +11,6 @@ from settings import (
     CS_PHONE_REQUEST
 )
 from bland_utils import handle_customer_service_request
-
-# Load environment variables
-load_dotenv()
 
 def initialize_session_state():
     """Initialize session state variables"""
