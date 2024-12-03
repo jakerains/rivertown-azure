@@ -189,42 +189,90 @@ def main():
     # Custom CSS for better styling
     st.markdown("""
         <style>
+        /* Force light mode styles */
+        [data-testid="stAppViewContainer"], 
+        [data-testid="stHeader"],
+        [data-testid="stToolbar"],
+        [data-testid="stSidebar"] {
+            background: #fcf9f2 !important;
+        }
+        [data-testid="stMarkdown"] {
+            color: #1f2937 !important;
+        }
         .main {
-            background-color: #fef3c7;
-            background-image: linear-gradient(135deg, #fef3c7 0%, #fffbeb 100%);
+            background-color: #fcf9f2;
+            background-image: linear-gradient(135deg, #fcf9f2 0%, #fff9ea 100%);
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
         }
         .stChatMessage {
-            background-color: rgba(255, 255, 255, 0.8) !important;
+            background-color: rgba(255, 255, 255, 0.95) !important;
             border-radius: 15px !important;
             padding: 20px !important;
             margin: 10px 0 !important;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05) !important;
+            border: 1px solid rgba(0,0,0,0.05) !important;
+            max-width: 850px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
         }
         .stTextInput > div > div > input {
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 10px;
+            padding: 0.75rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            max-width: 850px;
+            margin: 0 auto;
+        }
+        .stTextInput > div > div > input:focus {
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.1);
         }
         h1 {
             color: #92400e !important;
             text-align: center;
             padding: 20px 0;
             font-family: 'Arial', sans-serif;
+            font-size: 2.5rem !important;
+            font-weight: 700 !important;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem !important;
         }
+        /* Style for starter buttons */
         .stButton > button {
-            background-color: #f59e0b;
-            color: white;
-            border-radius: 10px;
+            background-color: rgba(245, 158, 11, 0.1);
+            color: #92400e;
+            border-radius: 12px;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            padding: 0.75rem 1.5rem;
+            margin: 0.25rem;
+            min-width: 200px;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+            font-weight: 500;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            backdrop-filter: blur(10px);
         }
         .stButton > button:hover {
-            background-color: #d97706;
+            background-color: rgba(245, 158, 11, 0.15);
+            border-color: rgba(245, 158, 11, 0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
         /* Style the hamburger menu button */
         button[data-testid="baseButton-header"] {
-            background-color: #92400e !important;
-            color: white !important;
+            background-color: rgba(146, 64, 14, 0.1) !important;
+            color: #92400e !important;
             padding: 0.5rem !important;
-            border-radius: 0.5rem !important;
+            border-radius: 0.75rem !important;
+            border: 1px solid rgba(146, 64, 14, 0.2) !important;
+            transition: all 0.2s ease !important;
         }
         button[data-testid="baseButton-header"]:hover {
-            background-color: #78350f !important;
+            background-color: rgba(146, 64, 14, 0.15) !important;
+            border-color: rgba(146, 64, 14, 0.3) !important;
         }
         /* Add "Menu" text next to hamburger icon */
         button[data-testid="baseButton-header"]::before {
@@ -234,7 +282,9 @@ def main():
         /* Improve chat message formatting */
         .stChatMessage p {
             margin-bottom: 1em !important;
-            line-height: 1.6 !important;
+            line-height: 1.7 !important;
+            color: #1f2937 !important;
+            font-size: 1rem !important;
         }
         .stChatMessage ul {
             margin-top: 0.5em !important;
@@ -242,6 +292,61 @@ def main():
         }
         .stChatMessage li {
             margin-bottom: 0.5em !important;
+        }
+        /* Force light mode for all elements */
+        .stApp {
+            background: #fcf9f2 !important;
+        }
+        .stDeployButton {
+            display: none !important;
+        }
+        .stStatusWidget {
+            background: #fcf9f2 !important;
+            border: 1px solid rgba(0,0,0,0.05) !important;
+        }
+        /* Style for starter buttons container */
+        div[data-testid="column"] {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .starter-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            margin: 2rem auto;
+            max-width: 850px;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 16px;
+            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            backdrop-filter: blur(10px);
+        }
+        /* Company tagline styling */
+        .company-tagline {
+            color: #92400e;
+            font-size: 1.1rem;
+            font-weight: 500;
+            text-align: center;
+            margin: 1rem 0 2rem;
+            letter-spacing: -0.2px;
+        }
+        /* Chat container styling */
+        .chat-container {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            backdrop-filter: blur(10px);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        /* Spinner styling */
+        .stSpinner > div {
+            border-color: #f59e0b !important;
+            border-bottom-color: transparent !important;
         }
         </style>
         """, unsafe_allow_html=True)
@@ -251,20 +356,69 @@ def main():
     with col2:
         st.title(f"{APP_ICON} Rivertown Ball Company")
         st.markdown("""
-            <p style='text-align: center; color: #92400e; margin-bottom: 30px;'>
+            <p class='company-tagline'>
             Crafting Premium Artisanal Balls Since 1985!
             </p>
         """, unsafe_allow_html=True)
 
-    # Create a container for chat messages
+    # Create a container for chat messages with styling
+    st.markdown('<div class="chat-container">', unsafe_allow_html=True)
     chat_container = st.container()
 
     # Initialize session state
     initialize_session_state()
+    if 'button_clicked' not in st.session_state:
+        st.session_state.button_clicked = False
 
     # Display chat history in container
     with chat_container:
         display_chat_history()
+
+    # Add conversation starter buttons (only if not clicked)
+    if not st.session_state.button_clicked:
+        button_container = st.container()
+        with button_container:
+            st.markdown('<div class="starter-buttons">', unsafe_allow_html=True)
+            col1, col2, col3 = st.columns([1,1,1])
+            
+            def send_starter_prompt(prompt):
+                st.session_state.button_clicked = True
+                if "messages" not in st.session_state:
+                    st.session_state.messages = []
+                st.session_state.messages.append({"role": "user", "content": prompt})
+                # Process the response immediately
+                with st.chat_message("assistant", avatar=ASSISTANT_ICON):
+                    message_placeholder = st.empty()
+                    with st.spinner("Crafting the perfect response for you... 🎯"):
+                        response = chat_with_products(
+                            messages=st.session_state.messages,
+                            context=st.session_state.context
+                        )
+                        # Stream the response
+                        full_response = stream_response(response["message"].content, message_placeholder)
+                        # Update context if needed
+                        st.session_state.context = response["context"]
+                        # Add assistant response to chat history
+                        st.session_state.messages.append(
+                            {"role": "assistant", "content": full_response}
+                        )
+                st.rerun()
+
+            with col1:
+                if st.button("What is the history of Rivertown Ball Company?"):
+                    send_starter_prompt("What is the history of Rivertown Ball Company?")
+            
+            with col2:
+                if st.button("How can I design my own ball?"):
+                    send_starter_prompt("How can I design my own ball?")
+            
+            with col3:
+                if st.button("Can I have someone call me?"):
+                    send_starter_prompt("Can I have someone call me?")
+            
+            st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)  # Close chat container
 
     # Handle user input
     process_user_input()
@@ -278,6 +432,7 @@ def main():
             st.session_state.cs_mode = False
             st.session_state.phone_number = None
             st.session_state.customer_name = None
+            st.session_state.button_clicked = False
             st.rerun()
         
         st.markdown("---")
