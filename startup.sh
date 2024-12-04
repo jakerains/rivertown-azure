@@ -38,6 +38,10 @@ echo "WEBSITES_PORT: $WEBSITES_PORT"
 PORT="${PORT:-${HTTP_PLATFORM_PORT:-${WEBSITES_PORT:-8000}}}"
 echo "Using port: $PORT"
 
+# Add after line 6
+echo "Startup script location: $0"
+echo "Working directory: $PWD"
+
 # Start Streamlit (from current directory)
 streamlit run app.py \
     --server.port $PORT \
