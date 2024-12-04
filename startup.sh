@@ -23,23 +23,22 @@ EVALUATION_MODEL = "$EVALUATION_MODEL"
 BLAND_API_KEY = "$BLAND_API_KEY"
 EOL
 
-# Debug: Print environment variables (remove in production)
+# Debug: Print environment variables
 echo "Checking environment variables..."
-echo "AIPROJECT_CONNECTION_STRING: $AIPROJECT_CONNECTION_STRING"
-echo "AISEARCH_INDEX_NAME: $AISEARCH_INDEX_NAME"
-
-# Debug: Check if secrets.toml was created
-echo "Checking if secrets.toml exists..."
-ls -la /root/.streamlit/
+echo "PORT: $PORT"
+echo "HTTP_PLATFORM_PORT: $HTTP_PLATFORM_PORT"
 
 # Set Python environment variables
 export PYTHONUNBUFFERED=1
 export PYTHONPATH=/home/site/wwwroot
 
-# Start Streamlit with increased timeout and memory settings
+# Use PORT from environment variable, fallback to 8000
+PORT="${PORT:-${HTTP_PLATFORM_PORT:-8000}}"
+
+# Start Streamlit with dynamic port
 cd /home/site/wwwroot
 streamlit run app.py \
-    --server.port 8000 \
+    --server.port $PORT \
     --server.address 0.0.0.0 \
     --server.maxUploadSize 200 \
     --server.timeout 60 \
