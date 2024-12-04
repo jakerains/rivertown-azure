@@ -4,7 +4,7 @@ from opentelemetry import trace
 import streamlit as st
 from azure.ai.projects import AIProjectClient
 from azure.identity import DefaultAzureCredential
-from config import ASSET_PATH, get_logger, enable_telemetry
+from config import ASSET_PATH, get_logger, enable_telemetry, get_secret
 from get_product_documents import get_product_documents
 from settings import SYSTEM_PROMPT, TEMPERATURE, MAX_TOKENS
 
@@ -15,7 +15,8 @@ tracer = trace.get_tracer(__name__)
 
 # create a project client using configuration from secrets.toml
 project = AIProjectClient.from_connection_string(
-    conn_str=st.secrets["AIPROJECT_CONNECTION_STRING"], credential=DefaultAzureCredential()
+    conn_str=get_secret("AIPROJECT_CONNECTION_STRING"),
+    credential=DefaultAzureCredential()
 )
 
 # create a chat client we can use for testing
@@ -31,7 +32,7 @@ def chat_with_products(messages: list, context: dict = None) -> dict:
     # First, use intent mapping to get better search context
     intent_prompt = PromptTemplate.from_prompty(Path(ASSET_PATH) / "intent_mapping.prompty")
     intent_response = chat.complete(
-        model=st.secrets["CHAT_MODEL"],
+        model=get_secret("CHAT_MODEL"),
         messages=intent_prompt.create_messages(conversation=messages),
         temperature=0.3,  # Lower temperature for more focused intent mapping
     )
@@ -47,7 +48,7 @@ def chat_with_products(messages: list, context: dict = None) -> dict:
     system_message = [{"role": "system", "content": combined_prompt}]
     
     response = chat.complete(
-        model=st.secrets["CHAT_MODEL"],
+        model=get_secret("CHAT_MODEL"),
         messages=system_message + messages,
         temperature=TEMPERATURE,
         max_tokens=MAX_TOKENS,

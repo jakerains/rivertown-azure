@@ -17,25 +17,31 @@ logger = logging.getLogger("app")
 logger.setLevel(logging.INFO)
 logger.addHandler(logging.StreamHandler(stream=sys.stdout))
 
+def get_secret(key: str) -> str:
+    """Get secret from either streamlit secrets or environment variables"""
+    try:
+        return st.secrets[key]
+    except (FileNotFoundError, KeyError):
+        return os.getenv(key)
 
 # Returns a module-specific logger, inheriting from the root app logger
 def get_logger(module_name):
     return logging.getLogger(f"app.{module_name}")
-
 
 # Enable instrumentation and logging of telemetry to the project
 def enable_telemetry(log_to_project: bool = False):
     AIInferenceInstrumentor().instrument()
 
     # enable logging message contents
-    if "AZURE_TRACING_GEN_AI_CONTENT_RECORDING_ENABLED" not in st.secrets:
-        st.secrets["AZURE_TRACING_GEN_AI_CONTENT_RECORDING_ENABLED"] = "true"
+    if not get_secret("AZURE_TRACING_GEN_AI_CONTENT_RECORDING_ENABLED"):
+        os.environ["AZURE_TRACING_GEN_AI_CONTENT_RECORDING_ENABLED"] = "true"
 
     if log_to_project:
         from azure.monitor.opentelemetry import configure_azure_monitor
 
         project = AIProjectClient.from_connection_string(
-            conn_str=st.secrets["AIPROJECT_CONNECTION_STRING"], credential=DefaultAzureCredential()
+            conn_str=get_secret("AIPROJECT_CONNECTION_STRING"),
+            credential=DefaultAzureCredential()
         )
         tracing_link = f"https://ai.azure.com/tracing?wsid=/subscriptions/{project.scope['subscription_id']}/resourceGroups/{project.scope['resource_group_name']}/providers/Microsoft.MachineLearningServices/workspaces/{project.scope['project_name']}"
         application_insights_connection_string = project.telemetry.get_connection_string()
@@ -44,7 +50,6 @@ def enable_telemetry(log_to_project: bool = False):
                 "No application insights configured, telemetry will not be logged to project. Add application insights at:"
             )
             logger.warning(tracing_link)
-
             return
 
         configure_azure_monitor(connection_string=application_insights_connection_string)
