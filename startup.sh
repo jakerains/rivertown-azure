@@ -32,6 +32,17 @@ echo "AISEARCH_INDEX_NAME: $AISEARCH_INDEX_NAME"
 echo "Checking if secrets.toml exists..."
 ls -la /root/.streamlit/
 
-# Start Streamlit
+# Set Python environment variables
+export PYTHONUNBUFFERED=1
+export PYTHONPATH=/home/site/wwwroot
+
+# Start Streamlit with increased timeout and memory settings
 cd /home/site/wwwroot
-streamlit run app.py --server.port 8000 --server.address 0.0.0.0 
+streamlit run app.py \
+    --server.port 8000 \
+    --server.address 0.0.0.0 \
+    --server.maxUploadSize 200 \
+    --server.timeout 60 \
+    --browser.serverAddress 0.0.0.0 \
+    --server.enableCORS=false \
+    --server.enableXsrfProtection=false 
