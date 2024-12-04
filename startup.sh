@@ -1,15 +1,15 @@
 #!/bin/bash
 
-# Debug: Print current directory
+# Debug: Print current directory and contents
 echo "Current directory: $(pwd)"
 echo "Directory contents:"
 ls -la
 
-# Create .streamlit directory (relative to current directory)
-mkdir -p .streamlit
+# Create .streamlit directory in the correct location
+mkdir -p /tmp/8dd148eac327cff/.streamlit
 
 # Create secrets.toml with environment variables
-cat > .streamlit/secrets.toml << EOL
+cat > /tmp/8dd148eac327cff/.streamlit/secrets.toml << EOL
 # Azure AI Project Connection
 AIPROJECT_CONNECTION_STRING = "$AIPROJECT_CONNECTION_STRING"
 
@@ -42,7 +42,6 @@ echo "Using port: $PORT"
 echo "Startup script location: $0"
 echo "Working directory: $PWD"
 
-# Start Streamlit (from current directory)
-streamlit run app.py \
-    --server.port $PORT \
-    --server.address 0.0.0.0
+# Start Streamlit
+cd /tmp/8dd148eac327cff
+streamlit run app.py --server.port $PORT --server.address 0.0.0.0
