@@ -13,6 +13,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      AIPROJECT_CONNECTION_STRING: ${{ secrets.AIPROJECT_CONNECTION_STRING }}
+      AISEARCH_INDEX_NAME: ${{ secrets.AISEARCH_INDEX_NAME }}
+      AISEARCH_ENDPOINT: ${{ secrets.AISEARCH_ENDPOINT }}
+      AISEARCH_KEY: ${{ secrets.AISEARCH_KEY }}
+      EMBEDDINGS_MODEL: ${{ secrets.EMBEDDINGS_MODEL }}
+      INTENT_MAPPING_MODEL: ${{ secrets.INTENT_MAPPING_MODEL }}
+      CHAT_MODEL: ${{ secrets.CHAT_MODEL }}
+      EVALUATION_MODEL: ${{ secrets.EVALUATION_MODEL }}
+      BLAND_API_KEY: ${{ secrets.BLAND_API_KEY }}
 
     steps:
       - uses: actions/checkout@v4
@@ -60,4 +70,4 @@ jobs:
         with:
           app-name: 'rivertownchat'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_54DC6ACB0B8B44C6AC4B43E6063FBBB1 }}
+          publish-profile: ${{ secrets.AZUREWEBAPP_PUBLISHPROFILE_54DC6ACB0B8B44C6AC4B43E6063FBBB1 }}
