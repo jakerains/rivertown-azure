@@ -1,10 +1,15 @@
 #!/bin/bash
 
-# Create .streamlit directory
-mkdir -p /root/.streamlit
+# Debug: Print current directory
+echo "Current directory: $(pwd)"
+echo "Directory contents:"
+ls -la
+
+# Create .streamlit directory (relative to current directory)
+mkdir -p .streamlit
 
 # Create secrets.toml with environment variables
-cat > /root/.streamlit/secrets.toml << EOL
+cat > .streamlit/secrets.toml << EOL
 # Azure AI Project Connection
 AIPROJECT_CONNECTION_STRING = "$AIPROJECT_CONNECTION_STRING"
 
@@ -24,24 +29,16 @@ BLAND_API_KEY = "$BLAND_API_KEY"
 EOL
 
 # Debug: Print environment variables
-echo "Checking environment variables..."
+echo "Checking port configuration..."
 echo "PORT: $PORT"
 echo "HTTP_PLATFORM_PORT: $HTTP_PLATFORM_PORT"
+echo "WEBSITES_PORT: $WEBSITES_PORT"
 
-# Set Python environment variables
-export PYTHONUNBUFFERED=1
-export PYTHONPATH=/home/site/wwwroot
+# Use PORT from environment variables with fallbacks
+PORT="${PORT:-${HTTP_PLATFORM_PORT:-${WEBSITES_PORT:-8000}}}"
+echo "Using port: $PORT"
 
-# Use PORT from environment variable, fallback to 8000
-PORT="${PORT:-${HTTP_PLATFORM_PORT:-8000}}"
-
-# Start Streamlit with dynamic port
-cd /home/site/wwwroot
+# Start Streamlit (from current directory)
 streamlit run app.py \
     --server.port $PORT \
-    --server.address 0.0.0.0 \
-    --server.maxUploadSize 200 \
-    --server.timeout 60 \
-    --browser.serverAddress 0.0.0.0 \
-    --server.enableCORS=false \
-    --server.enableXsrfProtection=false 
+    --server.address 0.0.0.0
