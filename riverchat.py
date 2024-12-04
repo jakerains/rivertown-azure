@@ -13,7 +13,7 @@ from settings import SYSTEM_PROMPT, TEMPERATURE, MAX_TOKENS
 logger = get_logger(__name__)
 tracer = trace.get_tracer(__name__)
 
-# create a project client using environment variables loaded from the .env file
+# create a project client using configuration from secrets.toml
 project = AIProjectClient.from_connection_string(
     conn_str=st.secrets["AIPROJECT_CONNECTION_STRING"], credential=DefaultAzureCredential()
 )

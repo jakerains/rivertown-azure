@@ -7,14 +7,15 @@ from azure.identity import DefaultAzureCredential
 from azure.core.credentials import AzureKeyCredential
 from azure.search.documents import SearchClient
 from config import ASSET_PATH, get_logger
+import streamlit as st
 
 # initialize logging and tracing objects
 logger = get_logger(__name__)
 tracer = trace.get_tracer(__name__)
 
-# create a project client using environment variables loaded from the .env file
+# create a project client using environment variables loaded from secrets.toml
 project = AIProjectClient.from_connection_string(
-    conn_str=os.environ["AIPROJECT_CONNECTION_STRING"], credential=DefaultAzureCredential()
+    conn_str=st.secrets["AIPROJECT_CONNECTION_STRING"], credential=DefaultAzureCredential()
 )
 
 # create a vector embeddings client that will be used to generate vector embeddings
@@ -29,7 +30,7 @@ search_connection = project.connections.get_default(
 # Create a search index client using the search connection
 # This client will be used to create and delete search indexes
 search_client = SearchClient(
-    index_name=os.environ["AISEARCH_INDEX_NAME"],
+    index_name=st.secrets["AISEARCH_INDEX_NAME"],
     endpoint=search_connection.endpoint_url,
     credential=AzureKeyCredential(key=search_connection.key),
 )
@@ -49,7 +50,7 @@ def get_product_documents(messages: list, context: dict = None) -> dict:
     intent_prompty = PromptTemplate.from_prompty(Path(ASSET_PATH) / "intent_mapping.prompty")
 
     intent_mapping_response = chat.complete(
-        model=os.environ["INTENT_MAPPING_MODEL"],
+        model=st.secrets["INTENT_MAPPING_MODEL"],
         messages=intent_prompty.create_messages(conversation=messages),
         **intent_prompty.parameters,
     )
@@ -58,7 +59,7 @@ def get_product_documents(messages: list, context: dict = None) -> dict:
     logger.debug(f"🧠 Intent mapping: {search_query}")
 
     # generate a vector representation of the search query
-    embedding = embeddings.embed(model=os.environ["EMBEDDINGS_MODEL"], input=search_query)
+    embedding = embeddings.embed(model=st.secrets["EMBEDDINGS_MODEL"], input=search_query)
     search_vector = embedding.data[0].embedding
 
     # search the index for products matching the search query
