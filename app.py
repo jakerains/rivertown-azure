@@ -54,19 +54,19 @@ def format_response(text):
                 
                 # Add period back if it's not the last sentence
                 if i < len(sentences) - 1:
-                    sentence += '.'
+                    sentence = sentence + '.'
                 
                 # Add double line break for transition words
                 if any(keyword in sentence.lower() for keyword in 
                       ['however', 'additionally', 'moreover', 
                        'in conclusion', 'finally', 'furthermore']):
-                    sentence += '\n\n'
+                    sentence = sentence + '\n\n'
                 # Add single line break for shorter sentences
                 elif len(sentence) < 50:
-                    sentence += '\n'
+                    sentence = sentence + '\n'
                 # Add double line break for longer sentences
                 else:
-                    sentence += '\n\n'
+                    sentence = sentence + '\n\n'
                     
                 formatted_sentences.append(sentence)
             
