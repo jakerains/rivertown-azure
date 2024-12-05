@@ -41,3 +41,6 @@ env/
 # Logs
 *.log
 logs/
+__pycache__/config.cpython-310.pyc
+__pycache__/riverchat.cpython-310.pyc
+__pycache__/config.cpython-310.pyc
