@@ -114,3 +114,9 @@ docs/generated/
 dmypy.json
 .pyre/
 .pytype/
+
+# Vercel
+.vercel
+.now
+.next
+node_modules/
